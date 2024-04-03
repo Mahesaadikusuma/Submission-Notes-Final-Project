@@ -92,7 +92,10 @@ function main() {
       button.addEventListener("click", (event) => {
         const noteId = event.target.id;
         // messageDelete(removenote(noteId));
-        removenote(noteId);
+        // removenote(noteId);
+
+        messageDelete(noteId);
+        console.log(messageDelete(noteId));
       });
     });
   };
@@ -123,10 +126,7 @@ function main() {
     });
   };
 
-  const messageDelete = (
-    noteId,
-    message = "Check your internet connection"
-  ) => {
+  const messageDelete = (message = "Check your internet connection") => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -137,12 +137,12 @@ function main() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
+        removenote(message);
         Swal.fire({
           title: "Deleted!",
           text: `${message}`,
           icon: "success",
         });
-        removenote(noteId);
       }
     });
   };
