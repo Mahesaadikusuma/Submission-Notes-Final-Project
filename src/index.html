@@ -3,52 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Dicoding Books</title>
+    <title>Notes App</title>
   </head>
   <body>
     <header>
-      <nav class="navbar navbar-dark bg-primary">
-        <span class="navbar-brand mb-0 h1">Dicoding Books</span>
-      </nav>
+      <!-- <nav class="navbar navbar-dark bg-primary">
+        <div class="container">
+          <a href="index.html" class="navbar-brand mb-0 h1">Notes App</a>
+        </div>
+      </nav> -->
+      <app-navbar></app-navbar>
     </header>
     <main class="container">
       <form action="" id="form">
         <div class="row">
           <div class="col-12">
             <div class="card">
-              <div class="card-header">
-                <h5 class="card-title">Input Buku</h5>
-              </div>
+              <!-- <div class="card-header">
+                <h5 class="card-title">Input Notes</h5>
+              </div> -->
+
+              <card-title></card-title>
               <div class="card-body">
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <label for="inputnoteId">ID Buku</label>
                   <input
                     id="inputnoteId"
                     type="text"
                     class="form-control"
                     placeholder="ID Buku" />
-                </div>
-                <div class="form-group">
-                  <label for="inputnoteTitle">Judul Buku</label>
+                </div> -->
+                <div class="mb-3">
+                  <label for="inputnoteTitle">Judul Notes</label>
                   <input
                     id="inputnoteTitle"
                     type="text"
                     class="form-control"
-                    placeholder="Judul Buku" />
+                    placeholder="Judul Note" />
                 </div>
-                <div class="form-group">
-                  <label for="inputnoteBody">Body</label>
+                <div class="mb-3 form-floating">
                   <textarea
-                    name=""
-                    id="inputnoteBody"
-                    class="form-control"
-                    placeholder="Pengarang"></textarea>
+                    class="form-control h-auto"
+                    placeholder="Leave a comment here"
+                    id="inputnoteBody"></textarea>
+                  <label for="inputnoteBody">Body</label>
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                   <button id="buttonSave" class="btn btn-success">Save</button>
-                  <button id="buttonUpdate" class="btn btn-primary">
-                    Update
-                  </button>
                 </div>
               </div>
             </div>
@@ -56,7 +57,32 @@
         </div>
       </form>
 
-      <div id="listnote" class="row"></div>
+      <!-- <div class="align-items-center mt-3 d-none" id="loadingIndicator">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden"></span>
+        </div>
+        <div class="ms-3">Loading...</div>
+      </div> -->
+      <loading-indicator></loading-indicator>
+
+      <!-- <div id="listnote" class="row"></div> -->
+
+      <div class="notes-history">
+        <h1 class="catatan">Catatan Terakhir</h1>
+
+        <section class="note-list" id="listnote">
+          <div
+            class="spinner-border text-warning"
+            role="status"
+            id="loadingNote">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </section>
+      </div>
     </main>
+
+    <footer>
+      <footer-bar></footer-bar>
+    </footer>
   </body>
 </html>

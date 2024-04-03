@@ -23,7 +23,9 @@
     "webpack-merge": "^5.2.0"
   },
   "dependencies": {
-    "bootstrap": "^4.4.1",
-    "regenerator-runtime": "^0.13.3"
+    "animejs": "^3.2.2",
+    "bootstrap": "^5.3.3",
+    "regenerator-runtime": "^0.13.3",
+    "sweetalert2": "^11.10.7"
   }
 }

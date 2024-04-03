@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 function main() {
   const api = "https://notes-api.dicoding.dev/v2";
   const getNotes = async () => {
@@ -8,7 +10,7 @@ function main() {
     if (responseJSON.error) {
       showResponseMessage(responseJSON.message);
     } else {
-      console.log(responseJSON.data);
+      // console.log(responseJSON.data);
       renderAllNotes(responseJSON.data);
     }
   };
@@ -26,19 +28,36 @@ function main() {
 
       const response = await fetch(`${api}/notes`, options);
       const responseJson = await response.json();
-      showResponseMessage(responseJson.message);
+      // showResponseMessage(responseJson.message);
+      console.log(responseJson);
+      messageData(responseJson.message);
       getNotes();
     } catch (error) {
       console.log(error);
     }
   };
 
-  const updatenote = (note) => {
+  const removenote = async (noteId) => {
     // tuliskan kode di sini!
-  };
-
-  const removenote = (noteId) => {
-    // tuliskan kode di sini!
+    try {
+      const options = {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(noteId),
+      };
+      const response = await fetch(`${api}/notes/${noteId}`, options);
+      const responseJson = await response.json();
+      console.log(responseJson);
+      // showResponseMessage(responseJson.message);
+      if (responseJson.status == "success") {
+        messageDelete(responseJson.message);
+      }
+      getNotes();
+    } catch (error) {
+      showResponseMessage(error);
+    }
   };
 
   /*
@@ -48,18 +67,23 @@ function main() {
   const renderAllNotes = (notes) => {
     const listBookElement = document.querySelector("#listnote");
     listBookElement.innerHTML = "";
-
-    notes.forEach((note) => {
+    // console.log(notes);
+    notes.map((note) => {
+      // console.log(`ini note`, note);
+      const formattedDate = formatDate(note.createdAt);
       listBookElement.innerHTML += `
-            <div class="col-lg-4 col-md-6 col-sm-12" style="margin-top: 12px;">
-              <div class="card">
-                <div class="card-body">
-                  <h5> ${note.title}</h5>
-                  <p>${note.body}</p>
-                  <button type="button" class="btn btn-danger button-delete" id="${note.id}">Hapus</button>
-                </div>
-              </div>
+        <div class="note-item">
+            <div class="note-header">
+              <h1 class="note-item-title">${note.title}</h1>
+              <p class="note-item-date">${formattedDate}</p>
+
+              <p class="note-item-body">
+                ${note.body}.
+              </p>
+
+              <button class="btn btn-danger button-delete mt-5" id="${note.id}">Delete</button>
             </div>
+        </div>
           `;
     });
 
@@ -67,39 +91,97 @@ function main() {
     buttons.forEach((button) => {
       button.addEventListener("click", (event) => {
         const noteId = event.target.id;
-
+        // messageDelete(removenote(noteId));
         removenote(noteId);
       });
     });
+  };
+
+  const formatDate = (dateString) => {
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      // minute: "numeric",
+      // second: "numeric",
+    };
+    return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
   const showResponseMessage = (message = "Check your internet connection") => {
     alert(message);
   };
 
+  const messageData = (message = "Check your internet connection") => {
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: ` ${message}`,
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
+
+  const messageDelete = (
+    noteId,
+    message = "Check your internet connection"
+  ) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Deleted!",
+          text: `${message}`,
+          icon: "success",
+        });
+        removenote(noteId);
+      }
+    });
+  };
+
   document.addEventListener("DOMContentLoaded", () => {
     const noteForm = document.getElementById("form");
 
-    const inputnoteId = document.querySelector("#inputnoteId");
+    // const inputnoteId = document.querySelector("#inputnoteId");
     const inputnoteTitle = document.querySelector("#inputnoteTitle");
     const inputnoteBody = document.querySelector("#inputnoteBody");
     const buttonSave = document.querySelector("#buttonSave");
-    const buttonUpdate = document.querySelector("#buttonUpdate");
 
     noteForm.addEventListener("submit", (event) => {
       event.preventDefault();
       const randomText =
         generateRandomString(10) + "-" + generateRandomString(10);
-      console.log(randomText);
-      buttonSave.addEventListener("click", function () {
-        const note = {
-          id: `note-${randomText}`,
-          title: inputnoteTitle.value.toString(),
-          body: inputnoteBody.value.toString(),
-          archived: false,
-          createdAt: new Date().toISOString(),
-        };
-        insertnote(note);
+
+      buttonSave.addEventListener("click", async function () {
+        const loadingIndicator = document.getElementById("loadingIndicator");
+        loadingIndicator.classList.remove("d-none");
+        loadingIndicator.classList.add("d-flex");
+
+        try {
+          const note = {
+            // id: `note-${randomText}`,
+            title: inputnoteTitle.value,
+            body: inputnoteBody.value,
+            // archived: false,
+            // createdAt: new Date().toISOString(),
+          };
+
+          await insertnote(note);
+          loadingIndicator.classList.remove("d-flex");
+          loadingIndicator.classList.add("d-none");
+          resetForm();
+        } catch (error) {
+          console.log(error);
+          loadingIndicator.style.display = "none";
+        }
       });
     });
 
@@ -116,7 +198,6 @@ function main() {
     }
 
     const resetForm = () => {
-      inputnoteId.value = "";
       inputnoteTitle.value = "";
       inputnoteBody.value = "";
     };

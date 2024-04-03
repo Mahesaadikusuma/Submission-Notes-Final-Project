@@ -8,3 +8,53 @@
 textarea {
   resize: none;
 }
+
+.notes-history {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 50px;
+}
+
+.notes-history .note-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 2%;
+  row-gap: 24px;
+}
+
+.notes-history .note-list .note-item {
+  background-color: white;
+  padding: 1rem;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  box-shadow: 17px 26px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.notes-history .note-list .note-item .note-header .note-item-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 10px 0;
+  color: #001d3d;
+}
+
+.notes-history .note-list .note-item .note-header .note-item-date {
+  font-size: 16px;
+  color: #414040d0;
+  margin: 5px 0;
+}
+
+.notes-history .note-list .note-item .note-header .note-item-body {
+  font-size: 18px;
+  text-align: justify;
+  margin: 10px 0;
+  color: #001d3d;
+}
+
+footer {
+  background-color: #023047;
+
+  margin-top: 50px;
+  display: block;
+}
