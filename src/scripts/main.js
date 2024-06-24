@@ -113,7 +113,12 @@ function main() {
   };
 
   const showResponseMessage = (message = "Check your internet connection") => {
-    alert(message);
+    // alert(message);
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: `Something went wrong! ${message}`,
+    });
   };
 
   const messageData = (message = "Check your internet connection") => {
@@ -126,8 +131,8 @@ function main() {
     });
   };
 
-  const messageDelete = (message = "Check your internet connection") => {
-    Swal.fire({
+  const messageDelete = async (message = "Check your internet connection") => {
+    const result = await Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
       icon: "warning",
@@ -135,16 +140,24 @@ function main() {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        removenote(message);
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await removenote(message);
         Swal.fire({
           title: "Deleted!",
           text: `${message}`,
           icon: "success",
         });
+      } catch (error) {
+        Swal.fire({
+          title: "Error!",
+          text: "An error occurred while deleting the note.",
+          icon: "error",
+        });
       }
-    });
+    }
   };
 
   document.addEventListener("DOMContentLoaded", () => {
